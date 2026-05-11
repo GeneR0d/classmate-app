@@ -1,0 +1,1242 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --c-primary:#2563EB;--c-primary-light:#EFF6FF;--c-primary-mid:#BFDBFE;
+  --c-success:#16A34A;--c-success-light:#F0FDF4;--c-success-mid:#BBF7D0;
+  --c-warning:#D97706;--c-warning-light:#FFFBEB;--c-warning-mid:#FDE68A;
+  --c-danger:#DC2626;--c-danger-light:#FEF2F2;--c-danger-mid:#FECACA;
+  --c-purple:#7C3AED;--c-purple-light:#F5F3FF;
+  --c-gray:#6B7280;--c-gray-light:#F9FAFB;--c-gray-mid:#E5E7EB;
+  --font:'IBM Plex Sans Thai',system-ui,sans-serif;
+  --radius:10px;--radius-sm:6px;
+}
+body{font-family:var(--font);font-size:14px;color:var(--color-text-primary);background:var(--color-background-tertiary,#F3F4F6);min-height:100vh}
+h1,h2,h3{font-weight:600}
+
+/* Layout */
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--color-background-primary,#fff);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 20px;display:flex;align-items:center;gap:12px;height:52px;position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:16px;font-weight:700;color:var(--c-primary);letter-spacing:-0.3px;display:flex;align-items:center;gap:7px}
+.topbar-logo i{font-size:20px}
+.topbar-class{font-size:13px;color:var(--c-gray);background:var(--c-gray-light);padding:3px 10px;border-radius:99px;border:0.5px solid var(--c-gray-mid)}
+.topbar-date{margin-left:auto;font-size:12px;color:var(--c-gray)}
+
+.nav{background:var(--color-background-primary,#fff);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 20px;display:flex;gap:0;overflow-x:auto}
+.nav-btn{padding:10px 14px;border:none;background:none;cursor:pointer;font-size:13px;font-family:var(--font);color:var(--c-gray);border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:var(--c-primary)}
+.nav-btn.active{color:var(--c-primary);border-bottom-color:var(--c-primary);font-weight:500}
+.nav-btn i{font-size:15px}
+
+.content{padding:16px 20px;flex:1;max-width:1100px;margin:0 auto;width:100%}
+
+/* Cards & Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat-card{background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary);border-radius:var(--radius);padding:14px 16px}
+.stat-card .label{font-size:11px;color:var(--c-gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-card .value{font-size:26px;font-weight:700;line-height:1.1}
+.stat-card .sub{font-size:11px;color:var(--c-gray);margin-top:3px}
+.stat-card.blue .value{color:var(--c-primary)}
+.stat-card.green .value{color:var(--c-success)}
+.stat-card.warn .value{color:var(--c-warning)}
+.stat-card.red .value{color:var(--c-danger)}
+
+.card{background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary);border-radius:var(--radius);padding:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.card-title i{color:var(--c-primary);font-size:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--radius-sm);border:0.5px solid var(--color-border-secondary,rgba(0,0,0,.2));cursor:pointer;font-size:12px;font-family:var(--font);font-weight:500;background:var(--color-background-primary,#fff);color:var(--color-text-primary);transition:background .12s,transform .08s}
+.btn:hover{background:var(--color-background-secondary,#F3F4F6)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+.btn.primary:hover{background:#1D4ED8}
+.btn.success{background:var(--c-success);color:#fff;border-color:var(--c-success)}
+.btn.danger{background:var(--c-danger);color:#fff;border-color:var(--c-danger)}
+.btn.sm{padding:4px 8px;font-size:11px}
+.btn i{font-size:13px}
+
+/* Attendance buttons */
+.att-btn{display:inline-flex;align-items:center;gap:3px;padding:4px 8px;border-radius:5px;border:0.5px solid transparent;cursor:pointer;font-size:11px;font-weight:500;font-family:var(--font);transition:all .12s}
+.att-btn.present{background:var(--c-success-light);color:var(--c-success);border-color:var(--c-success-mid)}
+.att-btn.absent{background:var(--c-danger-light);color:var(--c-danger);border-color:var(--c-danger-mid)}
+.att-btn.late{background:var(--c-warning-light);color:var(--c-warning);border-color:var(--c-warning-mid)}
+.att-btn.leave{background:var(--c-purple-light);color:var(--c-purple);border-color:#DDD6FE}
+.att-btn.inactive{opacity:.4}
+.att-btn.active-status{opacity:1;font-weight:700}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{padding:8px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--c-gray);border-bottom:0.5px solid var(--c-gray-mid);background:var(--c-gray-light);text-transform:uppercase;letter-spacing:.4px}
+.tbl td{padding:9px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--color-background-secondary,#F9FAFB)}
+
+/* Tags */
+.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:500}
+.tag.scholar{background:#FEF3C7;color:#92400E}
+.tag.special{background:#EDE9FE;color:#5B21B6}
+.tag.exchange{background:#DBEAFE;color:#1E40AF}
+.tag.watch{background:#FEE2E2;color:#991B1B}
+
+/* Badge */
+.badge{display:inline-block;min-width:18px;padding:2px 6px;border-radius:99px;font-size:10px;font-weight:600;text-align:center;line-height:1.4}
+.badge.green{background:var(--c-success-mid);color:#166534}
+.badge.red{background:var(--c-danger-mid);color:#991B1B}
+.badge.yellow{background:var(--c-warning-mid);color:#92400E}
+.badge.blue{background:var(--c-primary-mid);color:#1E40AF}
+.badge.gray{background:var(--c-gray-mid);color:#374151}
+
+/* Input */
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:7px 10px;border:0.5px solid var(--color-border-secondary,rgba(0,0,0,.25));border-radius:var(--radius-sm);font-size:13px;font-family:var(--font);background:var(--color-background-primary,#fff);color:var(--color-text-primary);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--c-primary);box-shadow:0 0 0 2px rgba(37,99,235,.1)}
+label{font-size:12px;font-weight:500;color:var(--color-text-secondary);display:block;margin-bottom:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.form-group{margin-bottom:10px}
+
+/* Chart bars */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px;padding-top:8px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bar{width:100%;border-radius:3px 3px 0 0;transition:height .3s;min-height:2px}
+.bar-label{font-size:10px;color:var(--c-gray)}
+.bar-val{font-size:10px;font-weight:600}
+
+/* Pie chart via conic-gradient */
+.pie{width:100px;height:100px;border-radius:50%;margin:0 auto}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:12px}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Calendar */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{text-align:center;padding:6px 2px;border-radius:5px;font-size:12px;cursor:pointer;transition:background .12s;border:0.5px solid transparent}
+.cal-day:hover{background:var(--c-primary-light)}
+.cal-day.today{background:var(--c-primary);color:#fff;font-weight:600}
+.cal-day.has-plan{border-color:var(--c-primary);color:var(--c-primary)}
+.cal-day.other-month{opacity:.35}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-header span{text-align:center;font-size:11px;font-weight:600;color:var(--c-gray)}
+
+/* Score table */
+.score-input{width:52px!important;text-align:center;padding:4px 6px}
+.grade-A{color:#166534;font-weight:700}
+.grade-Bplus{color:#1E40AF;font-weight:700}
+.grade-B{color:#1D4ED8}
+.grade-C{color:#92400E}
+.grade-D{color:#991B1B}
+.grade-F{color:var(--c-danger);font-weight:700}
+
+/* Profile */
+.profile-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;padding:16px;background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary);border-radius:var(--radius)}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--c-primary-mid);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--c-primary);flex-shrink:0}
+.profile-name{font-size:18px;font-weight:700}
+.profile-meta{font-size:12px;color:var(--c-gray);display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+
+/* Attendance status dots */
+.att-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin:0 1px}
+.att-dot.p{background:var(--c-success)}
+.att-dot.a{background:var(--c-danger)}
+.att-dot.l{background:var(--c-warning)}
+.att-dot.lv{background:var(--c-purple)}
+
+/* Section header */
+.section-title{font-size:13px;font-weight:600;color:var(--c-gray);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.section-title::after{content:'';flex:1;height:0.5px;background:var(--c-gray-mid)}
+
+/* Search bar */
+.search-bar{position:relative;margin-bottom:12px}
+.search-bar input{padding-left:32px}
+.search-bar i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--c-gray);font-size:15px}
+
+/* Alert box */
+.alert{padding:10px 14px;border-radius:var(--radius-sm);border:0.5px solid;font-size:13px;display:flex;align-items:flex-start;gap:8px;margin-bottom:12px}
+.alert.warn{background:var(--c-warning-light);border-color:var(--c-warning-mid);color:#92400E}
+.alert.info{background:var(--c-primary-light);border-color:var(--c-primary-mid);color:#1E40AF}
+.alert i{margin-top:1px;flex-shrink:0}
+
+/* Week schedule */
+.schedule-grid{display:grid;grid-template-columns:60px repeat(5,1fr);gap:3px;font-size:12px}
+.sch-header{background:var(--c-primary);color:#fff;text-align:center;padding:6px 4px;border-radius:4px;font-weight:600}
+.sch-time{text-align:right;padding:6px 8px;color:var(--c-gray);font-size:11px;display:flex;align-items:center;justify-content:flex-end}
+.sch-cell{padding:5px 6px;border-radius:4px;min-height:44px;border:0.5px solid transparent;cursor:pointer;transition:all .15s}
+.sch-cell:empty{background:var(--color-background-secondary,#F3F4F6);cursor:default}
+.sch-cell.filled{background:var(--c-primary-light);border-color:var(--c-primary-mid)}
+.sch-cell .sub-name{font-weight:600;font-size:11px;color:var(--c-primary)}
+.sch-cell .room{font-size:10px;color:var(--c-gray)}
+
+/* Behavior notes */
+.note-item{padding:10px 12px;border-radius:var(--radius-sm);border:0.5px solid;margin-bottom:8px}
+.note-item.good{background:#F0FDF4;border-color:var(--c-success-mid)}
+.note-item.watch{background:#FFFBEB;border-color:var(--c-warning-mid)}
+.note-item.discipline{background:#FEF2F2;border-color:var(--c-danger-mid)}
+.note-title{font-weight:600;font-size:12px}
+.note-date{font-size:11px;color:var(--c-gray)}
+
+/* Modal overlay */
+.modal-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:200;border-radius:var(--radius)}
+.modal{background:var(--color-background-primary,#fff);border-radius:var(--radius);padding:20px;width:92%;max-width:420px;border:0.5px solid var(--color-border-tertiary)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal-title{font-size:15px;font-weight:700}
+
+/* Notification badge */
+.notif-badge{position:absolute;top:-2px;right:-6px;min-width:16px;height:16px;background:var(--c-danger);color:#fff;border-radius:99px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1;padding:0 3px}
+
+/* Alert threshold */
+.threshold-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+
+.scrollable{overflow-y:auto;max-height:340px}
+
+/* Homework */
+.hw-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.hw-row:last-child{border-bottom:none}
+.hw-deadline{font-size:11px;color:var(--c-gray)}
+.hw-status{font-size:11px;padding:2px 7px;border-radius:99px}
+.hw-status.pending{background:var(--c-warning-light);color:#92400E}
+.hw-status.done{background:var(--c-success-light);color:#166534}
+.hw-status.overdue{background:var(--c-danger-light);color:#991B1B}
+
+/* Classroom switcher */
+.classroom-bar{background:var(--color-background-primary,#fff);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 20px;display:flex;align-items:center;gap:8px;height:38px;overflow-x:auto}
+.class-tab{padding:4px 12px;border-radius:99px;border:0.5px solid var(--c-gray-mid);background:none;cursor:pointer;font-size:12px;font-family:var(--font);color:var(--c-gray);white-space:nowrap;transition:all .15s}
+.class-tab:hover{border-color:var(--c-primary);color:var(--c-primary)}
+.class-tab.active{background:var(--c-primary);color:#fff;border-color:var(--c-primary);font-weight:600}
+.class-add-btn{padding:4px 10px;border-radius:99px;border:0.5px dashed var(--c-gray-mid);background:none;cursor:pointer;font-size:12px;font-family:var(--font);color:var(--c-gray);white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:4px}
+.class-add-btn:hover{border-color:var(--c-primary);color:var(--c-primary)}
+
+/* Inline edit */
+.editable-name{cursor:pointer;border-bottom:1px dashed transparent;transition:border-color .15s}
+.editable-name:hover{border-bottom-color:var(--c-primary);color:var(--c-primary)}
+.inline-edit-input{border:none;border-bottom:1.5px solid var(--c-primary);background:transparent;font-size:13px;font-weight:700;font-family:var(--font);color:var(--color-text-primary);outline:none;width:140px;padding:0}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const today = new Date();
+
+function makeDefaultStudents(){
+  return [
+    {id:1,name:"สมชาย ใจดี",no:1,tags:["scholar"],gender:"m",phone:"081-111-1111"},
+    {id:2,name:"สมหญิง รักเรียน",no:2,tags:["special"],gender:"f",phone:"082-222-2222"},
+    {id:3,name:"วิชัย เก่งมาก",no:3,tags:[],gender:"m",phone:"083-333-3333"},
+    {id:4,name:"นิภา สุขใจ",no:4,tags:["exchange"],gender:"f",phone:"084-444-4444"},
+    {id:5,name:"ประเสริฐ ดีงาม",no:5,tags:["scholar"],gender:"m",phone:"085-555-5555"},
+    {id:6,name:"กานดา มีสุข",no:6,tags:[],gender:"f",phone:"086-666-6666"},
+    {id:7,name:"อนุชา พร้อมเรียน",no:7,tags:["special"],gender:"m",phone:"087-777-7777"},
+    {id:8,name:"พิมพา ใจงาม",no:8,tags:[],gender:"f",phone:"088-888-8888"},
+    {id:9,name:"ธนกร สวัสดี",no:9,tags:["watch"],gender:"m",phone:"089-999-9999"},
+    {id:10,name:"ลลิตา รุ่งเรือง",no:10,tags:[],gender:"f",phone:"090-000-0000"},
+    {id:11,name:"กิตติ ขยันเรียน",no:11,tags:[],gender:"m"},
+    {id:12,name:"พรรณี สุขสม",no:12,tags:["scholar"],gender:"f"},
+    {id:13,name:"มานพ ใจเย็น",no:13,tags:[],gender:"m"},
+    {id:14,name:"วรรณา เพชรงาม",no:14,tags:[],gender:"f"},
+    {id:15,name:"สุรชัย ก้าวหน้า",no:15,tags:["watch"],gender:"m"},
+  ].map(s=>({...s,tags:s.tags||[]}));
+}
+
+function makeDefaultAttHist(students){
+  const hist={};
+  for(let i=0;i<14;i++){
+    const d=new Date(today); d.setDate(today.getDate()-i);
+    if(d.getDay()===0||d.getDay()===6) continue;
+    const key=d.toISOString().slice(0,10);
+    hist[key]={};
+    students.forEach(s=>{
+      const r=Math.random();
+      if(s.id===9||s.id===15){hist[key][s.id]=r<.35?'a':r<.45?'l':r<.5?'lv':'p';}
+      else{hist[key][s.id]=r<.05?'a':r<.1?'l':r<.08?'lv':'p';}
+    });
+  }
+  return hist;
+}
+
+function makeDefaultScores(students){
+  const sc={};
+  students.forEach(s=>{
+    sc[s.id]={midterm:Math.round(60+Math.random()*38),collected:Array(5).fill(0).map(()=>Math.round(50+Math.random()*48)),peer:Math.round(65+Math.random()*33),final:0};
+  });
+  const w=students.find(s=>s.id===9), w2=students.find(s=>s.id===15);
+  if(w&&sc[w.id]){sc[w.id].midterm=45;sc[w.id].collected=[40,38,42,45,41];sc[w.id].peer=50;}
+  if(w2&&sc[w2.id]){sc[w2.id].midterm=52;sc[w2.id].collected=[48,50,45,47,43];sc[w2.id].peer=55;}
+  return sc;
+}
+
+function makeDefaultClassroom(id, label, subject){
+  const students = makeDefaultStudents();
+  const attHist = makeDefaultAttHist(students);
+  const today2=new Date(today); today2.setDate(today.getDate()+2);
+  return {
+    id, label, subject,
+    students,
+    attHist,
+    scores: makeDefaultScores(students),
+    lessonPlans:{
+      [today.toISOString().slice(0,10)]:{title:"การเขียนโค้ด Python เบื้องต้น",standard:"คอม 3.1",note:"เตรียม laptop lab"},
+      [today2.toISOString().slice(0,10)]:{title:"โครงสร้างข้อมูล",standard:"คอม 3.2",note:""},
+    },
+    behaviorNotes:{
+      1:[{type:"good",text:"ช่วยเพื่อนในกลุ่มอย่างดีเยี่ยม",date:"2026-05-08"}],
+      9:[{type:"discipline",text:"คุยในห้องเรียน ต้องเตือนหลายครั้ง",date:"2026-05-06"},{type:"watch",text:"ไม่ส่งการบ้านต่อเนื่อง",date:"2026-05-08"}],
+      15:[{type:"watch",text:"ขาดเรียนโดยไม่แจ้งล่วงหน้า",date:"2026-05-07"}],
+    },
+    homework:[
+      {id:1,title:"แบบฝึกหัด Python ข้อ 1-20",deadline:"2026-05-13",status:"pending"},
+      {id:2,title:"โปรเจกต์กลุ่ม: เว็บไซต์โรงเรียน",deadline:"2026-05-20",status:"pending"},
+      {id:3,title:"รายงาน AI เบื้องต้น",deadline:"2026-05-09",status:"overdue"},
+      {id:4,title:"Quiz บทที่ 3",deadline:"2026-05-05",status:"done"},
+    ],
+    alertThreshold:3,
+    schedule:[
+      {day:1,period:1,subject,room:"ห้อง Lab 1"},{day:1,period:3,subject,room:"ห้อง Lab 1"},
+      {day:2,period:2,subject,room:"ห้อง Lab 2"},{day:3,period:1,subject,room:"ห้อง Lab 1"},
+      {day:3,period:4,subject,room:"ห้อง Lab 3"},{day:4,period:2,subject,room:"ห้อง Lab 2"},
+      {day:5,period:1,subject,room:"ห้อง Lab 1"},{day:5,period:3,subject,room:"ห้อง Lab 1"},
+    ],
+  };
+}
+
+// ─── PERSISTENCE ─────────────────────────────────────────────────────────────
+const LS_KEY = 'classmate_v2';
+function saveToStorage(){
+  try{
+    const payload={
+      classrooms: appData.classrooms.map(c=>({
+        ...c,
+        attHist: c.attHist, // keep full history
+      })),
+      currentClassId: appData.currentClassId,
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(payload));
+  }catch(e){console.warn('Save failed',e);}
+}
+function loadFromStorage(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){return null;}
+}
+
+// ─── APP DATA ─────────────────────────────────────────────────────────────────
+let appData;
+const saved = loadFromStorage();
+if(saved && saved.classrooms && saved.classrooms.length){
+  appData = saved;
+} else {
+  appData = {
+    classrooms:[
+      makeDefaultClassroom('c1','ม.5/3','คอมพิวเตอร์'),
+    ],
+    currentClassId:'c1',
+  };
+}
+
+function currentClass(){return appData.classrooms.find(c=>c.id===appData.currentClassId)||appData.classrooms[0];}
+
+// Convenience references updated on class switch
+let STUDENTS, ATT_HIST, SCHEDULE;
+function syncClassRefs(){
+  const c=currentClass();
+  STUDENTS=c.students;
+  ATT_HIST=c.attHist;
+  SCHEDULE=c.schedule;
+}
+syncClassRefs();
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let state = {
+  tab: 'dashboard',
+  attDate: today.toISOString().slice(0,10),
+  attendance: {...(ATT_HIST[today.toISOString().slice(0,10)]||{})},
+  students: STUDENTS,
+  scores: currentClass().scores,
+  lessonPlans: currentClass().lessonPlans,
+  behaviorNotes: currentClass().behaviorNotes,
+  homework: currentClass().homework,
+  alertThreshold: currentClass().alertThreshold||3,
+  searchQuery: '',
+  profileStudent: null,
+  calDate: new Date(today.getFullYear(), today.getMonth(), 1),
+  showAddStudent: false,
+  showAddNote: false,
+  showAddClass: false,
+  editingStudentId: null,
+  addNoteStudent: null,
+  selectedCalDay: null,
+  hwStatus: {},
+};
+
+function switchClass(id){
+  // save current attendance back to classroom
+  const c=currentClass();
+  c.attHist[state.attDate]={...state.attendance};
+  appData.currentClassId=id;
+  syncClassRefs();
+  const nc=currentClass();
+  state.tab='dashboard';
+  state.attDate=today.toISOString().slice(0,10);
+  state.attendance={...(nc.attHist[today.toISOString().slice(0,10)]||{})};
+  state.students=nc.students;
+  state.scores=nc.scores;
+  state.lessonPlans=nc.lessonPlans;
+  state.behaviorNotes=nc.behaviorNotes;
+  state.homework=nc.homework;
+  state.alertThreshold=nc.alertThreshold||3;
+  state.searchQuery='';
+  state.profileStudent=null;
+  state.editingStudentId=null;
+  saveToStorage();
+  render();
+}
+
+function persistState(){
+  const c=currentClass();
+  c.students=state.students;
+  c.scores=state.scores;
+  c.lessonPlans=state.lessonPlans;
+  c.behaviorNotes=state.behaviorNotes;
+  c.homework=state.homework;
+  c.alertThreshold=state.alertThreshold;
+  saveToStorage();
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function absCount(sid){
+  return Object.values(ATT_HIST).filter(d=>d[sid]==='a').length + (state.attendance[sid]==='a'?1:0);
+}
+function attStats(date){
+  const att = ATT_HIST[date]||state.attendance;
+  let p=0,a=0,l=0,lv=0;
+  STUDENTS.forEach(s=>{
+    const v=att[s.id]||'p';
+    if(v==='p')p++; else if(v==='a')a++; else if(v==='l')l++; else lv++;
+  });
+  return{p,a,l,lv,total:STUDENTS.length};
+}
+function calcGrade(sid){
+  const sc=state.scores[sid];
+  const collected_avg = sc.collected.reduce((a,b)=>a+b,0)/sc.collected.length;
+  const total = (sc.midterm/100)*20 + (collected_avg/100)*30 + (sc.peer/100)*20 + (sc.final/100)*30;
+  const pct = Math.round(total*100)/100;
+  if(pct>=80) return{g:'A',pct,cls:'grade-A'};
+  if(pct>=75) return{g:'B+',pct,cls:'grade-Bplus'};
+  if(pct>=70) return{g:'B',pct,cls:'grade-B'};
+  if(pct>=60) return{g:'C',pct,cls:'grade-C'};
+  if(pct>=50) return{g:'D',pct,cls:'grade-D'};
+  return{g:'F',pct,cls:'grade-F'};
+}
+function weekDays(){
+  const days=['จ','อ','พ','พฤ','ศ'];
+  const start=new Date(today);
+  start.setDate(today.getDate()-((today.getDay()||7)-1));
+  return Array(5).fill(0).map((_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return d.toISOString().slice(0,10);});
+}
+function thDate(ds){
+  if(!ds) return '';
+  const d=new Date(ds+'T00:00:00');
+  const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()+543}`;
+}
+function tagHtml(tags){
+  return tags.map(t=>{
+    const map={scholar:'ทุน',special:'พิเศษ',exchange:'แลกเปลี่ยน',watch:'ติดตาม'};
+    return `<span class="tag ${t}">${map[t]||t}</span>`;
+  }).join(' ');
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  document.getElementById('app').innerHTML = buildApp();
+  bindEvents();
+}
+
+function buildAddClassModal(){
+  return `<div class="modal-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:999">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title">เพิ่มห้องเรียนใหม่</span><button class="btn sm" id="close-addclass"><i class="ti ti-x"></i></button></div>
+      <div class="form-group"><label>ชื่อห้อง เช่น ม.4/1</label><input type="text" id="new-class-label" placeholder="ม.4/1"></div>
+      <div class="form-group"><label>วิชา</label><input type="text" id="new-class-subject" placeholder="คณิตศาสตร์"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn" id="cancel-addclass">ยกเลิก</button>
+        <button class="btn primary" id="save-addclass"><i class="ti ti-plus"></i> สร้างห้องเรียน</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildApp(){
+  const TABS=[
+    {id:'dashboard',icon:'ti-layout-dashboard',label:'Dashboard'},
+    {id:'students',icon:'ti-users',label:'นักเรียน'},
+    {id:'attendance',icon:'ti-checkbox',label:'เช็คชื่อ'},
+    {id:'scores',icon:'ti-star',label:'คะแนน'},
+    {id:'calendar',icon:'ti-calendar',label:'ปฏิทิน'},
+    {id:'summary',icon:'ti-chart-bar',label:'สรุป'},
+    {id:'alerts',icon:'ti-bell',label:'แจ้งเตือน'},
+    {id:'homework',icon:'ti-notebook',label:'การบ้าน'},
+  ];
+  const absStudents = STUDENTS.filter(s=>absCount(s.id)>=state.alertThreshold);
+  const cls = currentClass();
+  return `
+  ${state.showAddClass ? buildAddClassModal() : ''}
+  <div class="topbar">
+    <div class="topbar-logo"><i class="ti ti-school"></i> ClassMate</div>
+    <span class="topbar-class">${cls.label} · ${cls.subject}</span>
+    <span class="topbar-date">วันนี้: ${thDate(today.toISOString().slice(0,10))}</span>
+  </div>
+  <div class="classroom-bar">
+    <span style="font-size:11px;color:var(--c-gray);white-space:nowrap;margin-right:4px">ห้องเรียน:</span>
+    ${appData.classrooms.map(c=>`<button class="class-tab${c.id===appData.currentClassId?' active':''}" onclick="switchClass('${c.id}')">${c.label}</button>`).join('')}
+    <button class="class-add-btn" id="add-class-btn"><i class="ti ti-plus" style="font-size:12px"></i> เพิ่มห้อง</button>
+  </div>
+  <nav class="nav">
+    ${TABS.map(t=>`<button class="nav-btn${state.tab===t.id?' active':''}" data-tab="${t.id}">
+      <span style="position:relative"><i class="ti ${t.icon}"></i>${t.id==='alerts'&&absStudents.length?`<span class="notif-badge">${absStudents.length}</span>`:''}</span>
+      ${t.label}
+    </button>`).join('')}
+    ${state.profileStudent?`<button class="nav-btn${state.tab==='profile'?' active':''}" data-tab="profile">
+      <i class="ti ti-user-circle"></i> โปรไฟล์
+    </button>`:''}
+  </nav>
+  <div class="content">${buildTab()}</div>`;
+}
+
+function buildTab(){
+  switch(state.tab){
+    case 'dashboard': return buildDashboard();
+    case 'students': return buildStudents();
+    case 'attendance': return buildAttendance();
+    case 'scores': return buildScores();
+    case 'calendar': return buildCalendar();
+    case 'summary': return buildSummary();
+    case 'alerts': return buildAlerts();
+    case 'homework': return buildHomework();
+    case 'profile': return buildProfile();
+    default: return buildDashboard();
+  }
+}
+
+// DASHBOARD
+function buildDashboard(){
+  const stats = attStats(today.toISOString().slice(0,10));
+  const att = state.attendance;
+  const present = Object.values(att).filter(v=>v==='p').length;
+  const rate = Math.round(present/STUDENTS.length*100);
+  const unchecked = STUDENTS.length - Object.keys(att).length;
+  const absStudents = STUDENTS.filter(s=>absCount(s.id)>=state.alertThreshold);
+  const wd = weekDays();
+  const barData = wd.map(d=>{
+    const a = ATT_HIST[d]||{};
+    const p = Object.values(a).filter(v=>v==='p').length;
+    return{d,p,pct:STUDENTS.length?Math.round(p/STUDENTS.length*100):0};
+  });
+  const pieTotal = stats.p+stats.a+stats.l+stats.lv||1;
+  const pieAngle = {
+    p: Math.round(stats.p/pieTotal*360),
+    a: Math.round(stats.a/pieTotal*360),
+    l: Math.round(stats.l/pieTotal*360),
+    lv: Math.round(stats.lv/pieTotal*360),
+  };
+  const totalPie = pieAngle.p+pieAngle.a+pieAngle.l+pieAngle.lv;
+  pieAngle.p += 360-totalPie;
+  const p1=pieAngle.p, p2=p1+pieAngle.a, p3=p2+pieAngle.l;
+  return `
+  <div class="stats-grid">
+    <div class="stat-card blue"><div class="label">นักเรียนทั้งหมด</div><div class="value">${STUDENTS.length}</div><div class="sub">คน</div></div>
+    <div class="stat-card green"><div class="label">อัตราการมาวันนี้</div><div class="value">${rate}%</div><div class="sub">${present} / ${STUDENTS.length} คน</div></div>
+    <div class="stat-card warn"><div class="label">ยังไม่ได้เช็คชื่อ</div><div class="value">${unchecked}</div><div class="sub">ห้อง</div></div>
+    <div class="stat-card red"><div class="label">แจ้งเตือนขาดบ่อย</div><div class="value">${absStudents.length}</div><div class="sub">นักเรียน</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-chart-bar"></i>การมาเรียนสัปดาห์นี้</span></div>
+      <div class="bar-chart">
+        ${barData.map((b,i)=>`<div class="bar-wrap">
+          <div class="bar-val" style="font-size:10px;color:var(--c-gray)">${b.pct}%</div>
+          <div class="bar" style="height:${b.pct}px;background:${b.pct>=90?'#16A34A':b.pct>=75?'#2563EB':'#DC2626'}"></div>
+          <div class="bar-label">${['จ','อ','พ','พฤ','ศ'][i]}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-chart-pie"></i>สัดส่วนวันนี้</span></div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:8px">
+        <div class="pie" style="background:conic-gradient(#16A34A 0deg ${p1}deg,#DC2626 ${p1}deg ${p2}deg,#D97706 ${p2}deg ${p3}deg,#7C3AED ${p3}deg 360deg)"></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#16A34A"></div><span>มา ${stats.p} คน</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#DC2626"></div><span>ขาด ${stats.a} คน</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#D97706"></div><span>สาย ${stats.l} คน</span></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div><span>ลา ${stats.lv} คน</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="ti ti-alert-triangle"></i>นักเรียนที่ต้องติดตาม (ขาด ≥ ${state.alertThreshold} ครั้ง)</span>
+      <button class="btn sm" onclick="setTab('alerts')">ดูทั้งหมด →</button>
+    </div>
+    ${absStudents.length===0?'<div style="color:var(--c-gray);font-size:13px;text-align:center;padding:16px">ไม่มีนักเรียนที่ต้องติดตาม ✓</div>':
+    `<table class="tbl"><thead><tr><th>เลขที่</th><th>ชื่อ</th><th>ขาดเรียน</th><th>Tags</th><th></th></tr></thead><tbody>
+    ${absStudents.map(s=>`<tr>
+      <td>${s.no}</td><td>${s.name}</td>
+      <td><span class="badge red">${absCount(s.id)} ครั้ง</span></td>
+      <td>${tagHtml(s.tags)}</td>
+      <td><button class="btn sm" onclick="openProfile(${s.id})"><i class="ti ti-user"></i></button></td>
+    </tr>`).join('')}
+    </tbody></table>`}
+  </div>`;
+}
+
+// STUDENTS
+function buildStudents(){
+  const q = state.searchQuery.toLowerCase();
+  const filtered = state.students.filter(s=>!q||s.name.toLowerCase().includes(q)||String(s.no).includes(q));
+  return `
+  ${state.showAddStudent ? buildAddStudentModal() : ''}
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px">จัดการนักเรียน <span class="badge blue">${state.students.length} คน</span></h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn"><i class="ti ti-table-import"></i> นำเข้า Excel</button>
+      <button class="btn primary" id="add-student-btn"><i class="ti ti-plus"></i> เพิ่มนักเรียน</button>
+    </div>
+  </div>
+  <div class="search-bar"><i class="ti ti-search"></i><input type="text" placeholder="ค้นหานักเรียน..." id="student-search" value="${state.searchQuery}"></div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>เลขที่</th><th>ชื่อ</th><th>Tags</th><th>ขาดเรียน</th><th>เกรด</th><th>จัดการ</th></tr></thead>
+      <tbody>
+      ${filtered.map(s=>{
+        const g=calcGrade(s.id);
+        const isEditing = state.editingStudentId===s.id;
+        return`<tr>
+          <td>${s.no}</td>
+          <td>
+            ${isEditing
+              ? `<input class="inline-edit-input" id="edit-name-input" value="${s.name}" onkeydown="if(event.key==='Enter')saveStudentName(${s.id});if(event.key==='Escape')cancelEditName();">`
+              : `<b class="editable-name" onclick="startEditName(${s.id})" title="คลิกเพื่อแก้ไขชื่อ">${s.name}</b>`
+            }
+            ${isEditing
+              ? `<div style="display:flex;gap:4px;margin-top:4px"><button class="btn sm success" onclick="saveStudentName(${s.id})"><i class="ti ti-check"></i></button><button class="btn sm" onclick="cancelEditName()"><i class="ti ti-x"></i></button></div>`
+              : `<br><span style="font-size:11px;color:var(--c-gray)">${s.phone||''}</span>`
+            }
+          </td>
+          <td>${tagHtml(s.tags)}</td>
+          <td><span class="badge ${absCount(s.id)>=state.alertThreshold?'red':'gray'}">${absCount(s.id)}</span></td>
+          <td><span class="${g.cls}">${g.g}</span></td>
+          <td style="white-space:nowrap">
+            <button class="btn sm" onclick="openProfile(${s.id})"><i class="ti ti-user"></i></button>
+            <button class="btn sm" onclick="startEditName(${s.id})" title="แก้ไขชื่อ"><i class="ti ti-pencil"></i></button>
+            <button class="btn sm danger" onclick="deleteStudent(${s.id})"><i class="ti ti-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function buildAddStudentModal(){
+  return `<div class="modal-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title">เพิ่มนักเรียนใหม่</span><button class="btn sm" id="close-modal"><i class="ti ti-x"></i></button></div>
+      <div class="form-row"><div class="form-group"><label>เลขที่</label><input type="number" id="new-no" placeholder="16"></div>
+      <div class="form-group"><label>เพศ</label><select id="new-gender"><option value="m">ชาย</option><option value="f">หญิง</option></select></div></div>
+      <div class="form-group"><label>ชื่อ-นามสกุล</label><input type="text" id="new-name" placeholder="ชื่อ นามสกุล"></div>
+      <div class="form-group"><label>เบอร์โทร</label><input type="text" id="new-phone" placeholder="0xx-xxx-xxxx"></div>
+      <div class="form-group"><label>Tags</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          ${['scholar','special','exchange','watch'].map(t=>`<label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:400"><input type="checkbox" class="new-tag" value="${t}"> <span class="tag ${t}">${{scholar:'ทุน',special:'พิเศษ',exchange:'แลกเปลี่ยน',watch:'ติดตาม'}[t]}</span></label>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn" id="close-modal-2">ยกเลิก</button>
+        <button class="btn primary" id="save-student">บันทึก</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ATTENDANCE
+function buildAttendance(){
+  const wd = weekDays();
+  const todayKey = today.toISOString().slice(0,10);
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <h2 style="font-size:16px">เช็คชื่อ</h2>
+      <input type="date" id="att-date" value="${state.attDate}" style="width:auto;padding:5px 8px;font-size:12px">
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn success" id="all-present"><i class="ti ti-check"></i> มาทั้งหมด</button>
+      <button class="btn" id="save-att"><i class="ti ti-device-floppy"></i> บันทึก</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+    ${wd.map((d,i)=>{
+      const a=ATT_HIST[d]||{};
+      const p=Object.values(a).filter(v=>v==='p').length;
+      return`<button class="btn${d===state.attDate?' primary':''}" onclick="setAttDate('${d}')">${['จ','อ','พ','พฤ','ศ'][i]} ${new Date(d+'T00:00:00').getDate()}<br><small>${STUDENTS.length?Math.round(p/STUDENTS.length*100):0}%</small></button>`;
+    }).join('')}
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="ti ti-user-check"></i>${thDate(state.attDate)}</span>
+      <span style="font-size:12px;color:var(--c-gray)">
+        มา: <b style="color:var(--c-success)">${Object.values(state.attendance).filter(v=>v==='p').length}</b> &nbsp;
+        ขาด: <b style="color:var(--c-danger)">${Object.values(state.attendance).filter(v=>v==='a').length}</b> &nbsp;
+        สาย: <b style="color:var(--c-warning)">${Object.values(state.attendance).filter(v=>v==='l').length}</b> &nbsp;
+        ลา: <b style="color:var(--c-purple)">${Object.values(state.attendance).filter(v=>v==='lv').length}</b>
+      </span>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>เลขที่</th><th>ชื่อ</th><th colspan="4">สถานะ</th><th>ขาด</th></tr></thead>
+      <tbody>
+      ${STUDENTS.map(s=>{
+        const cur = state.attendance[s.id]||'p';
+        return`<tr>
+          <td>${s.no}</td><td>${s.name} ${tagHtml(s.tags)}</td>
+          ${['p','a','l','lv'].map(v=>`<td><button class="att-btn ${v} ${cur===v?'active-status':'inactive'}" data-sid="${s.id}" data-val="${v}">${{p:'✓ มา',a:'✗ ขาด',l:'⚡ สาย',lv:'☁ ลา'}[v]}</button></td>`).join('')}
+          <td><span class="badge ${absCount(s.id)>=state.alertThreshold?'red':'gray'}">${absCount(s.id)}</span></td>
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-header"><span class="card-title"><i class="ti ti-history"></i>ประวัติย้อนหลัง 2 สัปดาห์</span></div>
+    <div style="overflow-x:auto">
+      <table class="tbl" style="min-width:600px">
+        <thead><tr><th>ชื่อ</th>${Object.keys(ATT_HIST).sort().slice(-10).map(d=>`<th style="font-size:10px">${new Date(d+'T00:00:00').getDate()}/${new Date(d+'T00:00:00').getMonth()+1}</th>`).join('')}</tr></thead>
+        <tbody>
+        ${STUDENTS.map(s=>`<tr>
+          <td style="font-size:12px">${s.name}</td>
+          ${Object.keys(ATT_HIST).sort().slice(-10).map(d=>{
+            const v=ATT_HIST[d][s.id]||'p';
+            return`<td><span class="att-dot ${v}"></span></td>`;
+          }).join('')}
+        </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// SCORES
+function buildScores(){
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px">บันทึกคะแนน</h2>
+  </div>
+  <div class="alert info"><i class="ti ti-info-circle"></i>
+    <span>สัดส่วน: กลางภาค <b>20%</b> · เก็บ <b>30%</b> · Peer Assessment <b>20%</b> · ปลายภาค <b>30%</b></span>
+  </div>
+  <div class="card">
+    <div style="overflow-x:auto">
+      <table class="tbl" style="min-width:700px">
+        <thead>
+          <tr>
+            <th>เลขที่</th><th>ชื่อ</th>
+            <th>กลางภาค<br><small style="font-weight:400">20%</small></th>
+            <th colspan="5">คะแนนเก็บ 1-5<br><small style="font-weight:400">30%</small></th>
+            <th>Peer<br><small style="font-weight:400">20%</small></th>
+            <th>ปลายภาค<br><small style="font-weight:400">30%</small></th>
+            <th>รวม</th><th>เกรด</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${STUDENTS.map(s=>{
+            const sc=state.scores[s.id];
+            const g=calcGrade(s.id);
+            return`<tr>
+              <td>${s.no}</td><td style="font-size:12px;white-space:nowrap">${s.name}</td>
+              <td><input class="score-input" type="number" min="0" max="100" value="${sc.midterm}" data-sid="${s.id}" data-field="midterm"></td>
+              ${sc.collected.map((v,i)=>`<td><input class="score-input" type="number" min="0" max="100" value="${v}" data-sid="${s.id}" data-field="collected" data-idx="${i}"></td>`).join('')}
+              <td><input class="score-input" type="number" min="0" max="100" value="${sc.peer}" data-sid="${s.id}" data-field="peer"></td>
+              <td><input class="score-input" type="number" min="0" max="100" value="${sc.final}" data-sid="${s.id}" data-field="final"></td>
+              <td><b>${g.pct.toFixed(1)}</b></td>
+              <td><span class="${g.cls}">${g.g}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// CALENDAR
+function buildCalendar(){
+  const y=state.calDate.getFullYear(), m=state.calDate.getMonth();
+  const first=new Date(y,m,1).getDay()||7;
+  const days=new Date(y,m+1,0).getDate();
+  const months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const selKey = state.selectedCalDay;
+  const plan = selKey ? (state.lessonPlans[selKey]||null) : null;
+
+  let cells = [];
+  for(let i=1;i<first;i++) cells.push(`<div class="cal-day other-month"></div>`);
+  for(let d=1;d<=days;d++){
+    const key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=key===today.toISOString().slice(0,10);
+    const hasPlan=!!state.lessonPlans[key];
+    const isSel=key===selKey;
+    cells.push(`<div class="cal-day${isToday?' today':''}${hasPlan&&!isToday?' has-plan':''}${isSel?' has-plan':''}" data-calday="${key}" style="${isSel&&!isToday?'background:var(--c-primary-light);border-color:var(--c-primary)':''}">${d}${hasPlan?'<span style="display:block;width:4px;height:4px;background:var(--c-primary);border-radius:50%;margin:2px auto 0"></span>':'<span style="display:block;height:6px"></span>'}</div>`);
+  }
+
+  const schedCells = SCHEDULE.reduce((acc,s)=>{acc[`${s.day}-${s.period}`]=s;return acc;},{});
+  return `
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="margin-bottom:8px">
+        <span class="card-title"><i class="ti ti-calendar"></i>${months[m]} ${y+543}</span>
+        <div style="display:flex;gap:4px">
+          <button class="btn sm" id="cal-prev"><i class="ti ti-chevron-left"></i></button>
+          <button class="btn sm" id="cal-next"><i class="ti ti-chevron-right"></i></button>
+        </div>
+      </div>
+      <div class="cal-header">
+        ${['จ','อ','พ','พฤ','ศ','ส','อา'].map(d=>`<span>${d}</span>`).join('')}
+      </div>
+      <div class="cal-grid">${cells.join('')}</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-file-text"></i>Lesson Plan${selKey?` · ${thDate(selKey)}`:''}</span></div>
+      ${selKey?`
+      <div class="form-group"><label>หัวข้อบทเรียน</label><input type="text" id="lp-title" value="${plan?plan.title:''}" placeholder="หัวข้อบทเรียน"></div>
+      <div class="form-group"><label>มาตรฐานหลักสูตร</label><input type="text" id="lp-std" value="${plan?plan.standard:''}" placeholder="เช่น คอม 3.1"></div>
+      <div class="form-group"><label>หมายเหตุ</label><textarea id="lp-note" rows="3" placeholder="บันทึกเพิ่มเติม...">${plan?plan.note:''}</textarea></div>
+      <button class="btn primary" id="save-lp"><i class="ti ti-device-floppy"></i> บันทึก Lesson Plan</button>
+      `:`<div style="text-align:center;color:var(--c-gray);padding:32px;font-size:13px"><i class="ti ti-calendar" style="font-size:32px;display:block;margin-bottom:8px"></i>เลือกวันในปฏิทินเพื่อบันทึก Lesson Plan</div>`}
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-header"><span class="card-title"><i class="ti ti-table"></i>ตารางสอนรายสัปดาห์</span></div>
+    <div style="overflow-x:auto">
+      <div class="schedule-grid" style="min-width:480px">
+        <div></div>
+        ${['จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์'].map(d=>`<div class="sch-header">${d}</div>`).join('')}
+        ${Array(8).fill(0).map((_,i)=>`
+          <div class="sch-time">คาบ ${i+1}</div>
+          ${[1,2,3,4,5].map(day=>{
+            const cell=schedCells[`${day}-${i+1}`];
+            return cell?`<div class="sch-cell filled"><div class="sub-name">${cell.subject}</div><div class="room">${cell.room}</div></div>`:`<div class="sch-cell"></div>`;
+          }).join('')}
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// SUMMARY
+function buildSummary(){
+  const gradeCount = {A:0,'B+':0,B:0,C:0,D:0,F:0};
+  STUDENTS.forEach(s=>{gradeCount[calcGrade(s.id).g]++;});
+  const maxG = Math.max(...Object.values(gradeCount))||1;
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px">สรุปผลการเรียน</h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn"><i class="ti ti-file-spreadsheet"></i> Export CSV</button>
+      <button class="btn"><i class="ti ti-file-type-pdf"></i> Export PDF</button>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-chart-bar"></i>การกระจายเกรด</span></div>
+      <div class="bar-chart" style="height:120px;padding-top:16px">
+        ${Object.entries(gradeCount).map(([g,c])=>`<div class="bar-wrap">
+          <div class="bar-val">${c}</div>
+          <div class="bar" style="height:${Math.round(c/maxG*100)}px;background:${g==='A'?'#16A34A':g==='B+'?'#2563EB':g==='B'?'#3B82F6':g==='C'?'#D97706':g==='D'?'#EA580C':'#DC2626'}"></div>
+          <div class="bar-label">${g}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-list"></i>สรุปเกรด</span></div>
+      <table class="tbl">
+        <thead><tr><th>เกรด</th><th>จำนวน</th><th>%</th></tr></thead>
+        <tbody>
+          ${Object.entries(gradeCount).map(([g,c])=>`<tr><td>${g}</td><td>${c}</td><td>${Math.round(c/STUDENTS.length*100)}%</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-header"><span class="card-title"><i class="ti ti-table"></i>ตารางเกรดทั้งห้อง</span></div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>เลขที่</th><th>ชื่อ</th><th>กลางภาค</th><th>เก็บเฉลี่ย</th><th>Peer</th><th>ปลายภาค</th><th>คะแนนรวม</th><th>เกรด</th></tr></thead>
+        <tbody>
+          ${STUDENTS.map(s=>{
+            const sc=state.scores[s.id];
+            const g=calcGrade(s.id);
+            const avg=Math.round(sc.collected.reduce((a,b)=>a+b,0)/sc.collected.length);
+            return`<tr>
+              <td>${s.no}</td><td>${s.name}</td>
+              <td>${sc.midterm}</td><td>${avg}</td><td>${sc.peer}</td><td>${sc.final}</td>
+              <td><b>${g.pct.toFixed(1)}</b></td>
+              <td><span class="${g.cls}" style="font-size:14px">${g.g}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ALERTS
+function buildAlerts(){
+  const absStudents = STUDENTS.filter(s=>absCount(s.id)>=state.alertThreshold);
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px">แจ้งเตือนขาดบ่อย</h2>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header"><span class="card-title"><i class="ti ti-settings"></i>ตั้งค่าเกณฑ์</span></div>
+    <div class="threshold-row">
+      <label style="margin:0;white-space:nowrap">แจ้งเตือนเมื่อขาดเกิน</label>
+      <input type="number" id="threshold" value="${state.alertThreshold}" min="1" max="20" style="width:70px">
+      <label style="margin:0">ครั้ง</label>
+      <button class="btn primary sm" id="save-threshold"><i class="ti ti-check"></i> บันทึก</button>
+    </div>
+  </div>
+  ${absStudents.length===0?
+    `<div class="alert info"><i class="ti ti-check-circle"></i>ไม่มีนักเรียนที่ขาดเรียนเกินเกณฑ์ที่กำหนด</div>`:
+    `<div class="alert warn"><i class="ti ti-alert-triangle"></i>พบนักเรียน <b>${absStudents.length} คน</b> ที่ขาดเรียน ≥ ${state.alertThreshold} ครั้ง</div>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>เลขที่</th><th>ชื่อ</th><th>จำนวนขาด</th><th>Tags</th><th>ประวัติ 10 วัน</th><th>โปรไฟล์</th></tr></thead>
+        <tbody>
+        ${absStudents.map(s=>`<tr>
+          <td>${s.no}</td><td><b>${s.name}</b></td>
+          <td><span class="badge red">${absCount(s.id)} ครั้ง</span></td>
+          <td>${tagHtml(s.tags)}</td>
+          <td>${Object.keys(ATT_HIST).sort().slice(-10).map(d=>`<span class="att-dot ${ATT_HIST[d][s.id]||'p'}"></span>`).join('')}</td>
+          <td><button class="btn sm primary" onclick="openProfile(${s.id})"><i class="ti ti-user"></i></button></td>
+        </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`
+  }`;
+}
+
+// HOMEWORK
+function buildHomework(){
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h2 style="font-size:16px">การบ้าน / งานที่มอบหมาย</h2>
+    <button class="btn primary"><i class="ti ti-plus"></i> เพิ่มงาน</button>
+  </div>
+  <div class="card">
+    ${state.homework.map(hw=>`
+      <div class="hw-row">
+        <div style="flex:1">
+          <div style="font-weight:500;font-size:13px">${hw.title}</div>
+          <div class="hw-deadline"><i class="ti ti-calendar" style="font-size:12px"></i> กำหนดส่ง: ${thDate(hw.deadline)}</div>
+        </div>
+        <span class="hw-status ${hw.status}">${{pending:'รอส่ง',done:'ส่งแล้ว',overdue:'เลยกำหนด'}[hw.status]}</span>
+        <button class="btn sm"><i class="ti ti-edit"></i></button>
+        <button class="btn sm danger"><i class="ti ti-trash"></i></button>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+// PROFILE
+function buildProfile(){
+  const s = STUDENTS.find(x=>x.id===state.profileStudent);
+  if(!s) return '<div>ไม่พบข้อมูล</div>';
+  const g = calcGrade(s.id);
+  const sc = state.scores[s.id];
+  const notes = state.behaviorNotes[s.id]||[];
+  const absHist = Object.entries(ATT_HIST).sort((a,b)=>a[0]<b[0]?1:-1).slice(0,20);
+  return `
+  ${state.showAddNote ? buildAddNoteModal(s) : ''}
+  <button class="btn" onclick="setTab('students')" style="margin-bottom:12px"><i class="ti ti-arrow-left"></i> กลับ</button>
+  <div class="profile-header">
+    <div class="avatar">${s.name[0]}</div>
+    <div style="flex:1">
+      <div class="profile-name">${s.name}</div>
+      <div class="profile-meta">
+        <span>เลขที่ ${s.no}</span>
+        <span>${s.gender==='m'?'ชาย':'หญิง'}</span>
+        ${s.phone?`<span><i class="ti ti-phone" style="font-size:12px"></i> ${s.phone}</span>`:''}
+        <span>ขาด <b style="color:var(--c-danger)">${absCount(s.id)}</b> ครั้ง</span>
+      </div>
+      <div style="margin-top:6px">${tagHtml(s.tags)}</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:32px;font-weight:700" class="${g.cls}">${g.g}</div>
+      <div style="font-size:12px;color:var(--c-gray)">${g.pct.toFixed(1)} คะแนน</div>
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="stat-card blue"><div class="label">กลางภาค</div><div class="value">${sc.midterm}</div><div class="sub">คะแนน</div></div>
+    <div class="stat-card green"><div class="label">เก็บเฉลี่ย</div><div class="value">${Math.round(sc.collected.reduce((a,b)=>a+b,0)/sc.collected.length)}</div><div class="sub">คะแนน</div></div>
+    <div class="stat-card warn"><div class="label">Peer Assessment</div><div class="value">${sc.peer}</div><div class="sub">คะแนน</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="ti ti-calendar-check"></i>ประวัติการมาเรียน</span></div>
+      <div class="scrollable">
+        <table class="tbl">
+          <thead><tr><th>วันที่</th><th>สถานะ</th></tr></thead>
+          <tbody>
+          ${absHist.map(([d,att])=>{
+            const v=att[s.id]||'p';
+            const map={p:['มา','green'],a:['ขาด','red'],l:['สาย','yellow'],lv:['ลา','blue']};
+            return`<tr><td>${thDate(d)}</td><td><span class="badge ${map[v][1]}">${map[v][0]}</span></td></tr>`;
+          }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title"><i class="ti ti-notes"></i>บันทึกพฤติกรรม</span>
+        <button class="btn sm primary" id="add-note-btn"><i class="ti ti-plus"></i> เพิ่ม</button>
+      </div>
+      ${notes.length===0?`<div style="color:var(--c-gray);text-align:center;padding:20px;font-size:13px">ยังไม่มีบันทึก</div>`:
+      notes.map(n=>`<div class="note-item ${n.type}">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span class="note-title">${{good:'⭐ ดีเยี่ยม',watch:'👁 ต้องติดตาม',discipline:'⚠ ปัญหาวินัย'}[n.type]}</span>
+          <span class="note-date">${thDate(n.date)}</span>
+        </div>
+        <div style="font-size:13px">${n.text}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function buildAddNoteModal(s){
+  return `<div class="modal-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0">
+    <div class="modal">
+      <div class="modal-header"><span class="modal-title">เพิ่มบันทึกพฤติกรรม - ${s.name}</span><button class="btn sm" id="close-note-modal"><i class="ti ti-x"></i></button></div>
+      <div class="form-group"><label>ประเภท</label>
+        <select id="note-type">
+          <option value="good">⭐ ดีเยี่ยม</option>
+          <option value="watch">👁 ต้องติดตาม</option>
+          <option value="discipline">⚠ ปัญหาวินัย</option>
+        </select>
+      </div>
+      <div class="form-group"><label>รายละเอียด</label><textarea id="note-text" rows="3" placeholder="บันทึกพฤติกรรม..."></textarea></div>
+      <div class="form-group"><label>วันที่</label><input type="date" id="note-date" value="${today.toISOString().slice(0,10)}"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn" id="close-note-modal-2">ยกเลิก</button>
+        <button class="btn primary" id="save-note">บันทึก</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── EVENTS ───────────────────────────────────────────────────────────────────
+function setTab(t){state.tab=t;render();}
+function openProfile(id){state.profileStudent=id;state.tab='profile';render();}
+function setAttDate(d){
+  // save current attendance to history first
+  ATT_HIST[state.attDate]={...state.attendance};
+  state.attDate=d;
+  state.attendance={...(ATT_HIST[d]||{})};
+  render();
+}
+
+function startEditName(id){state.editingStudentId=id;render();setTimeout(()=>{const el=document.getElementById('edit-name-input');if(el){el.focus();el.select();}},0);}
+function cancelEditName(){state.editingStudentId=null;render();}
+function saveStudentName(id){
+  const inp=document.getElementById('edit-name-input');
+  if(!inp) return;
+  const newName=inp.value.trim();
+  if(!newName){alert('กรุณากรอกชื่อ');return;}
+  const s=state.students.find(x=>x.id===id);
+  if(s) s.name=newName;
+  state.editingStudentId=null;
+  persistState();
+  render();
+}
+
+function bindEvents(){
+  // Tab nav
+  document.querySelectorAll('.nav-btn[data-tab]').forEach(b=>{
+    b.addEventListener('click',()=>setTab(b.dataset.tab));
+  });
+
+  // Add class
+  const addClassBtn=document.getElementById('add-class-btn');
+  if(addClassBtn) addClassBtn.addEventListener('click',()=>{state.showAddClass=true;render();});
+  const closeAddClass=document.getElementById('close-addclass');
+  if(closeAddClass) closeAddClass.addEventListener('click',()=>{state.showAddClass=false;render();});
+  const cancelAddClass=document.getElementById('cancel-addclass');
+  if(cancelAddClass) cancelAddClass.addEventListener('click',()=>{state.showAddClass=false;render();});
+  const saveAddClass=document.getElementById('save-addclass');
+  if(saveAddClass) saveAddClass.addEventListener('click',()=>{
+    const label=document.getElementById('new-class-label').value.trim();
+    const subject=document.getElementById('new-class-subject').value.trim();
+    if(!label||!subject){alert('กรุณากรอกข้อมูลให้ครบ');return;}
+    const id='c'+Date.now();
+    appData.classrooms.push(makeDefaultClassroom(id,label,subject));
+    state.showAddClass=false;
+    switchClass(id);
+  });
+
+  // Attendance buttons
+  document.querySelectorAll('.att-btn[data-sid]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      state.attendance[b.dataset.sid]=b.dataset.val;
+      const sid=b.dataset.sid;
+      document.querySelectorAll(`.att-btn[data-sid="${sid}"]`).forEach(btn=>{
+        btn.classList.remove('active-status');btn.classList.add('inactive');
+      });
+      b.classList.add('active-status');b.classList.remove('inactive');
+    });
+  });
+
+  // Attendance date change
+  const attDateInput=document.getElementById('att-date');
+  if(attDateInput) attDateInput.addEventListener('change',e=>setAttDate(e.target.value));
+
+  // All present
+  const allPres=document.getElementById('all-present');
+  if(allPres) allPres.addEventListener('click',()=>{
+    STUDENTS.forEach(s=>{state.attendance[s.id]='p';});render();
+  });
+
+  // Save attendance
+  const saveAtt=document.getElementById('save-att');
+  if(saveAtt) saveAtt.addEventListener('click',()=>{
+    ATT_HIST[state.attDate]={...state.attendance};
+    persistState();
+    alert('บันทึกการเช็คชื่อเรียบร้อย ✓');
+  });
+
+  // Score inputs
+  document.querySelectorAll('.score-input[data-sid]').forEach(inp=>{
+    inp.addEventListener('change',e=>{
+      const sid=inp.dataset.sid, field=inp.dataset.field, idx=inp.dataset.idx;
+      const v=Math.max(0,Math.min(100,Number(e.target.value)));
+      if(field==='collected') state.scores[sid].collected[idx]=v;
+      else state.scores[sid][field]=v;
+      persistState();
+      render();
+    });
+  });
+
+  // Calendar nav
+  const calPrev=document.getElementById('cal-prev');
+  const calNext=document.getElementById('cal-next');
+  if(calPrev) calPrev.addEventListener('click',()=>{
+    const d=new Date(state.calDate);d.setMonth(d.getMonth()-1);state.calDate=d;render();
+  });
+  if(calNext) calNext.addEventListener('click',()=>{
+    const d=new Date(state.calDate);d.setMonth(d.getMonth()+1);state.calDate=d;render();
+  });
+
+  // Calendar day select
+  document.querySelectorAll('.cal-day[data-calday]').forEach(d=>{
+    d.addEventListener('click',()=>{state.selectedCalDay=d.dataset.calday;render();});
+  });
+
+  // Save lesson plan
+  const saveLp=document.getElementById('save-lp');
+  if(saveLp) saveLp.addEventListener('click',()=>{
+    const key=state.selectedCalDay;
+    state.lessonPlans[key]={
+      title:document.getElementById('lp-title').value,
+      standard:document.getElementById('lp-std').value,
+      note:document.getElementById('lp-note').value,
+    };
+    persistState();
+    alert('บันทึก Lesson Plan เรียบร้อย ✓');render();
+  });
+
+  // Threshold
+  const saveThresh=document.getElementById('save-threshold');
+  if(saveThresh) saveThresh.addEventListener('click',()=>{
+    state.alertThreshold=Number(document.getElementById('threshold').value)||3;
+    persistState();
+    render();
+  });
+
+  // Student search
+  const sSearch=document.getElementById('student-search');
+  if(sSearch) sSearch.addEventListener('input',e=>{state.searchQuery=e.target.value;render();});
+
+  // Add student btn
+  const addStudBtn=document.getElementById('add-student-btn');
+  if(addStudBtn) addStudBtn.addEventListener('click',()=>{state.showAddStudent=true;render();});
+  const closeModal=document.getElementById('close-modal');
+  if(closeModal) closeModal.addEventListener('click',()=>{state.showAddStudent=false;render();});
+  const closeModal2=document.getElementById('close-modal-2');
+  if(closeModal2) closeModal2.addEventListener('click',()=>{state.showAddStudent=false;render();});
+  const saveStud=document.getElementById('save-student');
+  if(saveStud) saveStud.addEventListener('click',()=>{
+    const name=document.getElementById('new-name').value.trim();
+    const no=Number(document.getElementById('new-no').value);
+    if(!name||!no){alert('กรุณากรอกข้อมูลให้ครบ');return;}
+    const tags=[...document.querySelectorAll('.new-tag:checked')].map(t=>t.value);
+    const gender=document.getElementById('new-gender').value;
+    const phone=document.getElementById('new-phone').value;
+    const newS={id:Date.now(),name,no,tags,gender,phone};
+    state.students.push(newS);
+    STUDENTS.push(newS);
+    state.scores[newS.id]={midterm:0,collected:[0,0,0,0,0],peer:0,final:0};
+    state.showAddStudent=false;
+    persistState();
+    render();
+  });
+
+  // Delete student
+  window.deleteStudent=id=>{
+    if(!confirm('ลบนักเรียนคนนี้?')) return;
+    const idx=state.students.findIndex(s=>s.id===id);
+    if(idx>-1) state.students.splice(idx,1);
+    const idx2=STUDENTS.findIndex(s=>s.id===id);
+    if(idx2>-1) STUDENTS.splice(idx2,1);
+    persistState();
+    render();
+  };
+
+  // Add note
+  const addNoteBtn=document.getElementById('add-note-btn');
+  if(addNoteBtn) addNoteBtn.addEventListener('click',()=>{state.showAddNote=true;render();});
+  const closeNoteModal=document.getElementById('close-note-modal');
+  if(closeNoteModal) closeNoteModal.addEventListener('click',()=>{state.showAddNote=false;render();});
+  const closeNoteModal2=document.getElementById('close-note-modal-2');
+  if(closeNoteModal2) closeNoteModal2.addEventListener('click',()=>{state.showAddNote=false;render();});
+  const saveNote=document.getElementById('save-note');
+  if(saveNote) saveNote.addEventListener('click',()=>{
+    const sid=state.profileStudent;
+    if(!state.behaviorNotes[sid]) state.behaviorNotes[sid]=[];
+    state.behaviorNotes[sid].push({
+      type:document.getElementById('note-type').value,
+      text:document.getElementById('note-text').value,
+      date:document.getElementById('note-date').value,
+    });
+    state.showAddNote=false;
+    persistState();
+    render();
+  });
+
+  window.setTab=setTab;
+  window.openProfile=openProfile;
+  window.switchClass=switchClass;
+  window.startEditName=startEditName;
+  window.cancelEditName=cancelEditName;
+  window.saveStudentName=saveStudentName;
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
